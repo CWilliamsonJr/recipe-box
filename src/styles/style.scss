@@ -1,0 +1,38 @@
+$color : white;
+$inputwidth: 300px;
+$margin-left:59px;
+
+body{
+  background-color:darken( $color,15%);
+}
+
+ul{
+  list-style: none;
+}
+li{
+  border:black solid 5px;
+  margin-bottom: 5px;
+  width:$inputwidth;
+  padding-left: 5px;
+}
+li:hover{
+  background-color: white;
+}
+
+input{
+  width: $inputwidth;
+}
+
+textarea{
+  @extend input;
+  height: 150px;
+  margin-left: 11px;
+  margin-top: 5px;
+}
+.recipeList{
+  margin-left: $margin-left;
+}
+button{
+  margin-left: $margin-left + 110px;
+
+}
