@@ -12,7 +12,6 @@ class RecipeContainer extends React.Component { // container to hold all the rec
         return (
             <div className='container'>
                 <div className='row'>
-                    <button>+ Add new Recipe</button>
                     <RecipeForm/>
                 </div>
             </div>
@@ -28,34 +27,34 @@ class RecipeForm extends React.Component {
                 {
                     id: lil.uuid(),
                     name: "Peantbutter & Jelly Sandwich",
-                    Ingredients: "bred, Peantbutter,jelly"
+                    ingredients: "bread, Peantbutter,jelly"
 
                 }, {
                     id: lil.uuid(),
                     name: "Grilled Cheese",
-                    Ingredients: "bread, cheese,butter"
+                    ingredients: "bread, cheese,butter"
                 }, {
                     id: lil.uuid(),
                     name: "Turkey Sandwich",
-                    Ingredients: "bread, honey roasted turkey, mustard, letteuce, tomato"
+                    ingredients: "bread, honey roasted turkey, mustard, letteuce, tomato"
                 }
             ]
         }
     }
-    handleOnClick(event){
-        this.refs.inputbox.value = event.target.id;
-        console.log(event);
+    newRecipe = () => {
+        //this.refs.inputbox.value ;
+        this.setState({recipes:this.state.recipes.concat({
+            id: lil.uuid(),
+            name: "New Recipe",
+            ingredients: "Add ingredients"
+        })})
     }
+
     render() {
         return (
-            <div onClick={() => this.handleOnClick(event)}>
-                <div className='recipeList'><RecipeBox recipeList={this.state.recipes}/></div>
-                <div className='RecipeForm'>
-                    <form action='#'>
-                        <label  htmlFor='recipeName'>Recipe Name:</label> <input ref='inputbox' id='recipeName' type='text' required /> <br />
-                        <label htmlFor='ingredientsList'>Ingredients:</label> <textarea ref='textbox' id="ingredientsList" defaultValue=""></textarea>
-                    </form>
-                </div>
+            <div >
+                <button onClick={() => this.newRecipe()}>+ Add new Recipe</button>
+                <div ><RecipeBox recipeList={this.state.recipes}/></div>
             </div>
         )
     }
@@ -66,19 +65,27 @@ class RecipeBox extends React.Component { // Displayes recipe Names
         super(props)
 
     }
-
+    handleOnClick = (listName,listDesc) =>{
+        this.refs.inputbox.value = listName;
+        this.refs.textbox.value = listDesc;
+    }
     render() {
         let recipeList = this.props.recipeList;
         return (
             <div>
-                <div>
+                <div className='recipeList'>
                     <ul>
                         {recipeList.map((element,index) => {
-                            return <li id={'id_'+index} key={element.id}>{element.name}</li>
+                            return <li onClick={()=>this.handleOnClick(element.name, element.ingredients)}  key={element.id}>{element.name}</li>
                         })}
                     </ul>
                 </div>
-
+                <div className='RecipeForm'>
+                    <form action='#' className="hide">
+                        <label  htmlFor='recipeName'>Recipe Name:</label> <input ref='inputbox' id='recipeName' type='text' required /> <br />
+                        <label htmlFor='ingredientsList'>ingredients:</label> <textarea ref='textbox' id="ingredientsList" defaultValue=""></textarea>
+                    </form>
+                </div>
             </div>
         );
     }
