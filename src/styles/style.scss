@@ -1,21 +1,24 @@
 $color : white;
 $inputwidth: 300px;
 $margin-left:59px;
+$icon-size: 50px;
 
 body{
   background-color:darken( $color,15%);
 }
 
-ul{
+.recipes{
   list-style: none;
 }
-li{
+.recipes li{
   border:black solid 5px;
   margin-bottom: 5px;
   width:$inputwidth;
   padding-left: 5px;
+  display: inline-block;
+
 }
-li:hover{
+.recipes li:hover{
   background-color: white;
 }
 
@@ -29,10 +32,24 @@ textarea{
   margin-left: 11px;
   margin-top: 5px;
 }
-.recipeList{
+.recipeList, .textlist, .textlist span{
   margin-left: $margin-left  ;
 }
 button{
   margin-left: $margin-left + 110px;
+}
+
+.textlist ul{
+  list-style: none;
+    li{
+      text-indent: 50px;
+    }
+}
+.displayInline{
+  display: inline;
+  margin-left: 10px;
+}
+i{
+  margin-right: 10px;
 
 }
