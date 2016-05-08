@@ -14,7 +14,6 @@ import {
 $(document).on('click', '.recipes div', function() {
     $(".recipes li").removeClass("active");
     $(this).find('li').addClass("active");
-    console.log(this);
 });
 
 class RecipeContainer extends React.Component { // container to hold all the recipes
@@ -126,7 +125,7 @@ Place chimichangas on top and add a dollop of sour cream, sprinkle with diced to
             ]
         }
     }
-    newRecipe = () => {
+    NewRecipe = () => {
 
         this.setState({
             recipes: this.state.recipes.concat({id: lil.uuid(), name: "New Recipe", ingredients: `Add ingredients`, instructions: `Add instructions`})
@@ -156,7 +155,7 @@ Place chimichangas on top and add a dollop of sour cream, sprinkle with diced to
     render() {
         return (
             <div >
-                <button onClick={() => this.newRecipe()} className='add_recipe btn btn-primary'>Add new Recipe</button>
+                <button onClick={() => this.NewRecipe()} className='add_recipe btn btn-primary'>Add new Recipe</button>
                 <div><RecipeBox update={this.onEdit} onDelete={this.onDelete} recipeList={this.state.recipes}/></div>
             </div>
         )
@@ -170,11 +169,11 @@ class RecipeBox extends React.Component { // Displayes recipe Names
             show: ''
         };
     }
-    handleOnClick = (recipe) => {
+    DisplayList = (recipe) => {
         let ingredients = recipe.ingredients;
         let instructions = recipe.instructions;
         let regex = /\n/g;
-
+        console.log(localStorage);
         ingredients = ingredients.split(regex).map((element, index) => {
             return <li key={index}>{element}</li>
         });
@@ -196,18 +195,15 @@ class RecipeBox extends React.Component { // Displayes recipe Names
 
         this.setState({show: display});
     };
-    doUpdate = (recipe, recipeName, ingredientsList, instructionsList) => {
-        this.handleOnClick({ingredients: ingredientsList, instructions: instructionsList, name: recipeName});
+    onUpdate = (recipe, recipeName, ingredientsList, instructionsList) => {
+        this.DisplayList({ingredients: ingredientsList, instructions: instructionsList, name: recipeName});
         this.props.update(recipe, recipeName, ingredientsList, instructionsList);
     };
 
-    hideModal = (recipe) => {
-        this.handleOnClick(recipe)
-    };
 
     onEdit = (recipe) => {
         let showform = (
-            <Modal show={true} onHide={() => this.hideModal(recipe)}>
+            <Modal show={true} onHide={() => this.DisplayList(recipe)}>
                 <Modal.Header>
                     <Modal.Title>Edit Recipe for {recipe.name}</Modal.Title>
                 </Modal.Header>
@@ -228,8 +224,8 @@ class RecipeBox extends React.Component { // Displayes recipe Names
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={() => this.hideModal(recipe)}>Close</Button>
-                    <Button onClick={() => this.doUpdate(recipe.id, recipetxt.value, ingredientsList.value, instructionsList.value)} bsStyle="primary">Save changes</Button>
+                    <Button onClick={() => this.DisplayList(recipe)}>Close</Button>
+                    <Button onClick={() => this.onUpdate(recipe.id, recipetxt.value, ingredientsList.value, instructionsList.value)} bsStyle="primary">Save changes</Button>
                 </Modal.Footer>
             </Modal>
         );
@@ -238,8 +234,11 @@ class RecipeBox extends React.Component { // Displayes recipe Names
     };
 
     onDelete = (id) =>{
-        this.props.onDelete(id);
-        this.setState({show:''});
+
+        if(confirm('Are you sure you want to delete this recipe')){
+            this.props.onDelete(id);
+            this.setState({show:''});
+        }
     };
     render() {
         let recipeList = this.props.recipeList;
@@ -250,7 +249,7 @@ class RecipeBox extends React.Component { // Displayes recipe Names
 
                         {recipeList.map((element, index) => {
                             return <div key={element.id}>
-                                <li onClick={() => this.handleOnClick(element)}>{element.name}
+                                <li onClick={() => this.DisplayList(element)}>{element.name}
                                 </li>
                                 <div className='displayInline'>
                                     <i role='button' title='edit recipe' className="fa fa-pencil fa-lg btn btn-success" aria-hidden="true" onClick={() => this.onEdit(element)}></i>

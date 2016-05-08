@@ -32,7 +32,7 @@ body {
     width: $inputwidth + 250px;
 }
 .recipeList{
-  max-height: 300px;
+  max-height: 210px;
   overflow: auto;
   width: $inputwidth +200px;
 }
@@ -67,4 +67,5 @@ i {
 }
 ul.instructions {
     list-style-type: decimal;
+    
 }
