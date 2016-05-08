@@ -125,6 +125,16 @@ Place chimichangas on top and add a dollop of sour cream, sprinkle with diced to
             ]
         }
     }
+    componentDidMount() {
+    if (localStorage.state) {
+      let prevState = JSON.parse(localStorage.state);
+      this.setState({recipes:prevState});
+      
+    }
+  }
+  componentDidUpdate(prevProps, prevState) {
+    localStorage.state = JSON.stringify(this.state.recipes);
+  }
     NewRecipe = () => {
 
         this.setState({
