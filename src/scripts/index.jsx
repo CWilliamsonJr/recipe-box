@@ -2,6 +2,20 @@ require('../styles/style.scss');
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {
+    Modal,
+    Button,
+    ControlLabel,
+    Input,
+    FormControl,
+    FormGroup
+} from 'react-bootstrap';
+
+$(document).on('click', '.recipes div', function() {
+    $(".recipes li").removeClass("active");
+    $(this).find('li').addClass("active");
+    console.log(this);
+});
 
 class RecipeContainer extends React.Component { // container to hold all the recipes
     constructor(props) {
@@ -127,23 +141,23 @@ Place chimichangas on top and add a dollop of sour cream, sprinkle with diced to
 
         this.setState({recipes: recipes});
     };
-    handleUpdate = (recipeId,recipeName,ingredientsList,instructionsList) => {
+    onEdit = (recipeId, recipeName, ingredientsList, instructionsList) => {
         let update = this.state.recipes;
 
-        update.map((element)=>{
-            if(element.id === recipeId){
+        update.map((element) => {
+            if (element.id === recipeId) {
                 element.name = recipeName;
                 element.ingredients = ingredientsList;
                 element.instructions = instructionsList;
             }
         })
-        this.setState({recipes:update});
+        this.setState({recipes: update});
     };
     render() {
         return (
             <div >
-                <button onClick={() => this.newRecipe()}>+ Add new Recipe</button>
-                <div><RecipeBox update={this.handleUpdate} onDelete={this.onDelete} recipeList={this.state.recipes}/></div>
+                <button onClick={() => this.newRecipe()} className='add_recipe btn btn-primary'>Add new Recipe</button>
+                <div><RecipeBox update={this.onEdit} onDelete={this.onDelete} recipeList={this.state.recipes}/></div>
             </div>
         )
     }
@@ -182,28 +196,50 @@ class RecipeBox extends React.Component { // Displayes recipe Names
 
         this.setState({show: display});
     };
-    doUpdate = (recipe,recipeName,ingredientsList,instructionsList) =>{
-        this.handleOnClick({ingredients:ingredientsList,instructions:instructionsList, name:recipeName});
-        this.props.update(recipe,recipeName,ingredientsList,instructionsList);
+    doUpdate = (recipe, recipeName, ingredientsList, instructionsList) => {
+        this.handleOnClick({ingredients: ingredientsList, instructions: instructionsList, name: recipeName});
+        this.props.update(recipe, recipeName, ingredientsList, instructionsList);
     };
+
+    hideModal = (recipe) => {
+        this.handleOnClick(recipe)
+    };
+
     onEdit = (recipe) => {
         let showform = (
-            <div>
-            <form>
-                <label htmlFor='recipeName'>Recipe Name:</label>
-                <input defaultValue={recipe.name} id='recipeName' type='text' required/>
-                <br/>
-                <label htmlFor='ingredientsList'>Ingredients:</label>
-                <textarea defaultValue={recipe.ingredients} id="ingredientsList"></textarea>
-                 <br />
-                <label htmlFor='instructionsList'>Instructions:</label>
-                <textarea defaultValue={recipe.instructions} id="instructionsList" ></textarea>
-            </form>
-            <button onClick={()=> this.doUpdate(recipe.id,recipeName.value,ingredientsList.value,instructionsList.value)}>Are you finsished</button>
-            </div>
+            <Modal show={true} onHide={() => this.hideModal(recipe)}>
+                <Modal.Header>
+                    <Modal.Title>Edit Recipe for {recipe.name}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <form>
+                        <FormGroup controlId="recipetxt">
+                            <ControlLabel>Recipe Name</ControlLabel>
+                            <FormControl type="input" defaultValue={recipe.name}/>
+                        </FormGroup>
+                        <FormGroup controlId="ingredientsList">
+                            <ControlLabel>Recipe Ingredients</ControlLabel>
+                            <FormControl componentClass="textarea" defaultValue={recipe.ingredients}/>
+                        </FormGroup>
+                        <FormGroup controlId="instructionsList">
+                            <ControlLabel>Recipe Instructions</ControlLabel>
+                            <FormControl componentClass="textarea" defaultValue={recipe.instructions}/>
+                        </FormGroup>
+                    </form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={() => this.hideModal(recipe)}>Close</Button>
+                    <Button onClick={() => this.doUpdate(recipe.id, recipetxt.value, ingredientsList.value, instructionsList.value)} bsStyle="primary">Save changes</Button>
+                </Modal.Footer>
+            </Modal>
         );
 
         this.setState({show: showform});
+    };
+
+    onDelete = (id) =>{
+        this.props.onDelete(id);
+        this.setState({show:''});
     };
     render() {
         let recipeList = this.props.recipeList;
@@ -217,8 +253,8 @@ class RecipeBox extends React.Component { // Displayes recipe Names
                                 <li onClick={() => this.handleOnClick(element)}>{element.name}
                                 </li>
                                 <div className='displayInline'>
-                                    <i role='button' title='edit recipe' className="fa fa-pencil fa-lg" aria-hidden="true" onClick={() => this.onEdit(element)}></i>
-                                    <i role='button' title='remove recipe' className="fa fa-ban fa-lg" aria-hidden="true" onClick={() => this.props.onDelete(element.id)}></i>
+                                    <i role='button' title='edit recipe' className="fa fa-pencil fa-lg btn btn-success" aria-hidden="true" onClick={() => this.onEdit(element)}></i>
+                                    <i role='button' title='remove recipe' className="fa fa-ban fa-lg btn btn-danger" aria-hidden="true" onClick={() => this.onDelete(element.id)}></i>
                                 </div>
                             </div>
                         })}

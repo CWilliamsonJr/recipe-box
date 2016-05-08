@@ -2,6 +2,7 @@ $color: white;
 $inputwidth: 300px;
 $margin-left: 59px;
 $icon-size: 50px;
+$selction-color:white;
 body {
     background-color: darken( $color,15%);
 }
@@ -16,21 +17,24 @@ body {
     border: black solid 5px;
 }
 .recipes li:hover {
-    background-color: white;
+    background-color: $selction-color;
 }
-input {
-    width: $inputwidth;
+.active{
+  background-color: $selction-color ;
 }
-textarea {
-    height: 150px;
+#recipetxt{
+  margin-left: 11px;
+}
+#ingredientsList, #instructionsList {
+    height: 170px;
     margin-top: 5px;
     margin-left: 11px;
-    width: $inputwidth;
+    width: $inputwidth + 250px;
 }
 .recipeList{
   max-height: 300px;
   overflow: auto;
-  width: $inputwidth +150px;
+  width: $inputwidth +200px;
 }
 .recipeList,
 .textlist {
@@ -38,6 +42,10 @@ textarea {
 }
 button {
     margin-left: $margin-left + 110px;
+}
+.add_recipe{
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 .recipe-name {
     width: $inputwidth + 100px;
