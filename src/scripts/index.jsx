@@ -173,7 +173,7 @@ class RecipeBox extends React.Component { // Displayes recipe Names
         let ingredients = recipe.ingredients;
         let instructions = recipe.instructions;
         let regex = /\n/g;
-        console.log(localStorage);
+        
         ingredients = ingredients.split(regex).map((element, index) => {
             return <li key={index}>{element}</li>
         });
