@@ -8,7 +8,8 @@ import {
     ControlLabel,
     Input,
     FormControl,
-    FormGroup
+    FormGroup,
+    HelpBlock
 } from 'react-bootstrap';
 
 $(document).on('click', '.recipes div', function() {
@@ -129,7 +130,7 @@ Place chimichangas on top and add a dollop of sour cream, sprinkle with diced to
     if (localStorage.state) {
       let prevState = JSON.parse(localStorage.state);
       this.setState({recipes:prevState});
-      
+
     }
   }
   componentDidUpdate(prevProps, prevState) {
@@ -138,7 +139,7 @@ Place chimichangas on top and add a dollop of sour cream, sprinkle with diced to
     NewRecipe = () => {
 
         this.setState({
-            recipes: this.state.recipes.concat({id: lil.uuid(), name: "New Recipe", ingredients: `Add ingredients`, instructions: `Add instructions`})
+            recipes: this.state.recipes.concat({id: lil.uuid(), name: '', ingredients: '', instructions: ''})
         })
     };
     onDelete = (id) => {
@@ -159,14 +160,14 @@ Place chimichangas on top and add a dollop of sour cream, sprinkle with diced to
                 element.ingredients = ingredientsList;
                 element.instructions = instructionsList;
             }
-        })
+        });
         this.setState({recipes: update});
     };
     render() {
         return (
             <div >
                 <button onClick={() => this.NewRecipe()} className='add_recipe btn btn-primary'>Add new Recipe</button>
-                <div><RecipeBox update={this.onEdit} onDelete={this.onDelete} recipeList={this.state.recipes}/></div>
+                <div><RecipeBox newRecipe={this.NewRecipe}   update={this.onEdit} onDelete={this.onDelete} recipeList={this.state.recipes}/></div>
             </div>
         )
     }
@@ -179,11 +180,13 @@ class RecipeBox extends React.Component { // Displayes recipe Names
             show: ''
         };
     }
+
     DisplayList = (recipe) => {
         let ingredients = recipe.ingredients;
         let instructions = recipe.instructions;
         let regex = /\n/g;
-        
+
+        recipe.name = this.NameRequire(recipe.name);
         ingredients = ingredients.split(regex).map((element, index) => {
             return <li key={index}>{element}</li>
         });
@@ -205,7 +208,15 @@ class RecipeBox extends React.Component { // Displayes recipe Names
 
         this.setState({show: display});
     };
+
+    NameRequire = (recipeName) =>{
+        while(!(!!recipeName.trim())){
+            recipeName = String(prompt('Please enter in a recipe name'));
+        }
+        return recipeName;
+    };
     onUpdate = (recipe, recipeName, ingredientsList, instructionsList) => {
+        recipeName = this.NameRequire(recipeName);
         this.DisplayList({ingredients: ingredientsList, instructions: instructionsList, name: recipeName});
         this.props.update(recipe, recipeName, ingredientsList, instructionsList);
     };
@@ -219,17 +230,18 @@ class RecipeBox extends React.Component { // Displayes recipe Names
                 </Modal.Header>
                 <Modal.Body>
                     <form>
-                        <FormGroup controlId="recipetxt">
+                        <FormGroup controlId="recipetxt" >
                             <ControlLabel>Recipe Name</ControlLabel>
-                            <FormControl type="input" defaultValue={recipe.name}/>
+                            <FormControl placeholder='Recipe Name' type="input" defaultValue={recipe.name}/>
+                             <HelpBlock bsClass='helptxt'>Recipe Name is required</HelpBlock>
                         </FormGroup>
                         <FormGroup controlId="ingredientsList">
                             <ControlLabel>Recipe Ingredients</ControlLabel>
-                            <FormControl componentClass="textarea" defaultValue={recipe.ingredients}/>
+                            <FormControl placeholder='Recipe Ingredients' componentClass="textarea" defaultValue={recipe.ingredients}/>
                         </FormGroup>
                         <FormGroup controlId="instructionsList">
                             <ControlLabel>Recipe Instructions</ControlLabel>
-                            <FormControl componentClass="textarea" defaultValue={recipe.instructions}/>
+                            <FormControl placeholder='Recipe Instructions' componentClass="textarea" defaultValue={recipe.instructions}/>
                         </FormGroup>
                     </form>
                 </Modal.Body>
@@ -260,6 +272,7 @@ class RecipeBox extends React.Component { // Displayes recipe Names
                         {recipeList.map((element, index) => {
                             return <div key={element.id}>
                                 <li onClick={() => this.DisplayList(element)}>{element.name}
+
                                 </li>
                                 <div className='displayInline'>
                                     <i role='button' title='edit recipe' className="fa fa-pencil fa-lg btn btn-success" aria-hidden="true" onClick={() => this.onEdit(element)}></i>
