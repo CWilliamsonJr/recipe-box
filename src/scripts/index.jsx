@@ -6,18 +6,17 @@ import {
     Modal,
     Button,
     ControlLabel,
-    Input,
     FormControl,
     FormGroup,
     HelpBlock
 } from 'react-bootstrap';
 
-$(document).on('click', '.recipes div', function() {
+$(document).on('click', '.recipes div', function() { // hilights selected recipe
     $(".recipes li").removeClass("active");
     $(this).find('li').addClass("active");
 });
 
-class RecipeContainer extends React.Component { // container to hold all the recipes
+class RecipeContainer extends React.Component { // container to hold the page elements
     constructor(props) {
         super(props)
     }
@@ -37,7 +36,7 @@ class RecipeForm extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            recipes: [
+            recipes: [ //exmaple recipes
                 {
                     id: lil.uuid(),
                     name: "Sloppy Joes Recipe",
@@ -126,23 +125,23 @@ Place chimichangas on top and add a dollop of sour cream, sprinkle with diced to
             ]
         }
     }
-    componentDidMount() {
+    componentDidMount() { // loads saved data to state from local storage
     if (localStorage.state) {
       let prevState = JSON.parse(localStorage.state);
       this.setState({recipes:prevState});
 
     }
   }
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate() { // saves state to local storage
     localStorage.state = JSON.stringify(this.state.recipes);
   }
-    NewRecipe = () => {
+    NewRecipe = () => { // adds new recipe
 
         this.setState({
             recipes: this.state.recipes.concat({id: lil.uuid(), name: '', ingredients: '', instructions: ''})
         })
     };
-    onDelete = (id) => {
+    onDelete = (id) => { // removes recipe
         let recipes = this.state.recipes;
 
         recipes = recipes.filter((element) => {
@@ -151,7 +150,7 @@ Place chimichangas on top and add a dollop of sour cream, sprinkle with diced to
 
         this.setState({recipes: recipes});
     };
-    onEdit = (recipeId, recipeName, ingredientsList, instructionsList) => {
+    onEdit = (recipeId, recipeName, ingredientsList, instructionsList) => { // propagate changes to the recipe
         let update = this.state.recipes;
 
         update.map((element) => {
@@ -181,12 +180,12 @@ class RecipeBox extends React.Component { // Displayes recipe Names
         };
     }
 
-    DisplayList = (recipe) => {
+    DisplayList = (recipe) => { // shows the text of the recipe
         let ingredients = recipe.ingredients;
         let instructions = recipe.instructions;
-        let regex = /\n/g;
+        let regex = /\n/g; // regular expression that separates the array at new lines
 
-        recipe.name = this.NameRequire(recipe.name);
+        recipe.name = this.NameRequire(recipe.name); // makes sure the recipe has a name
         ingredients = ingredients.split(regex).map((element, index) => {
             return <li key={index}>{element}</li>
         });
@@ -206,24 +205,24 @@ class RecipeBox extends React.Component { // Displayes recipe Names
             </div>
         );
 
-        this.setState({show: display});
+        this.setState({show: display}); // shows it to the screen
     };
 
-    NameRequire = (recipeName) =>{
+    NameRequire = (recipeName) =>{ // used to make sure recipe has a name
         while(!(!!recipeName.trim())){
             recipeName = String(prompt('Please enter in a recipe name'));
         }
         return recipeName;
     };
     onUpdate = (recipe, recipeName, ingredientsList, instructionsList) => {
-        recipeName = this.NameRequire(recipeName);
-        this.DisplayList({ingredients: ingredientsList, instructions: instructionsList, name: recipeName});
-        this.props.update(recipe, recipeName, ingredientsList, instructionsList);
+        recipeName = this.NameRequire(recipeName); // checks for no name
+        this.DisplayList({ingredients: ingredientsList, instructions: instructionsList, name: recipeName}); // prints it back to screen
+        this.props.update(recipe, recipeName, ingredientsList, instructionsList); // sends the updated fields to the parent
     };
 
 
     onEdit = (recipe) => {
-        let showform = (
+        let showform = ( // modal used to edit the recipe
             <Modal show={true} onHide={() => this.DisplayList(recipe)}>
                 <Modal.Header>
                     <Modal.Title>Edit Recipe for {recipe.name}</Modal.Title>
@@ -255,8 +254,7 @@ class RecipeBox extends React.Component { // Displayes recipe Names
         this.setState({show: showform});
     };
 
-    onDelete = (id) =>{
-
+    onDelete = (id) =>{ // removes the recipe
         if(confirm('Are you sure you want to delete this recipe')){
             this.props.onDelete(id);
             this.setState({show:''});
@@ -269,7 +267,7 @@ class RecipeBox extends React.Component { // Displayes recipe Names
                 <div className='recipeList'>
                     <ul className='recipes'>
 
-                        {recipeList.map((element, index) => {
+                        {recipeList.map((element, index) => { // prints recipe names to the screen
                             return <div key={element.id}>
                                 <li onClick={() => this.DisplayList(element)}>{element.name}
 
@@ -283,7 +281,7 @@ class RecipeBox extends React.Component { // Displayes recipe Names
                     </ul>
                 </div>
                 <div className='RecipeForm'>
-                    {this.state.show}
+                    {this.state.show} {/*prints either the modal or recipe text to screen*/}
                 </div>
             </div>
         );
