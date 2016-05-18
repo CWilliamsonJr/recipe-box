@@ -23,14 +23,42 @@ class RecipeContainer extends React.Component { // container to hold the page el
 
     render() {
         return (
+        <div>
+        <PageHeader />
             <div className='container'>
                 <div className='row'>
                     <RecipeForm/>
                 </div>
             </div>
+            <PageFooter />
+        </div>
         );
     }
 }
+
+class PageHeader extends React.Component {
+    render() {
+        return (
+            <nav className='navbar'>
+                <div className='container'>
+                    <div className='h2 text-center'>Recipe Box
+                    </div>
+                </div>
+            </nav>
+        )
+    }
+}
+class PageFooter extends React.Component {
+    render() {
+        return (
+            <footer>
+                <div className=''>Designed by Clarence Williamson
+                </div>
+            </footer>
+        )
+    }
+}
+
 
 class RecipeForm extends React.Component {
     constructor(props) {
@@ -172,6 +200,7 @@ Place chimichangas on top and add a dollop of sour cream, sprinkle with diced to
     }
 }
 
+
 class RecipeBox extends React.Component { // Displayes recipe Names
     constructor(props) {
         super(props)
@@ -245,7 +274,7 @@ class RecipeBox extends React.Component { // Displayes recipe Names
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={() => this.DisplayList(recipe)}>Close</Button>
+                    <Button onClick={() => this.DisplayList(recipe)}>Close</Button>{/*Send the info back to the screen on close or hide*/}
                     <Button onClick={() => this.onUpdate(recipe.id, recipetxt.value, ingredientsList.value, instructionsList.value)} bsStyle="primary">Save changes</Button>
                 </Modal.Footer>
             </Modal>
