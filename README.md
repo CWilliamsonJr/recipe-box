@@ -13,4 +13,4 @@
 
 6.All new recipes I add are saved in my browser's local storage. If I refresh the page, these recipes will still be there.
 
-**Can be viewed at\:** [http://codepen.io/Leo81202/pen/EKrVrY] (http://codepen.io/Leo81202/full/EKrVrY)
+**Can be viewed at\:** [http://codepen.io/Leo81202/full/EKrVrY] (http://codepen.io/Leo81202/full/EKrVrY)
